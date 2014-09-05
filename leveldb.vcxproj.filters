@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="table">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="leveldb">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="util">
+      <UniqueIdentifier>{7fa49ad3-7e4a-4c70-9363-2173ce13b2a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="port">
+      <UniqueIdentifier>{e2806b46-13af-4e8e-816f-4fd948bee340}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="slice.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="cache.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="atomic_pointer.h">
+      <Filter>port</Filter>
+    </ClInclude>
+    <ClInclude Include="port_posix.h">
+      <Filter>port</Filter>
+    </ClInclude>
+    <ClInclude Include="thread_annatations.h">
+      <Filter>port</Filter>
+    </ClInclude>
+    <ClInclude Include="port.h">
+      <Filter>port</Filter>
+    </ClInclude>
+    <ClInclude Include="mutexlock.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="hash.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="coding.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="crc32c.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="posix_logger.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="env.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="status.h">
+      <Filter>util</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="cache.cc">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="port_posix.cc">
+      <Filter>port</Filter>
+    </ClCompile>
+    <ClCompile Include="hash.cc">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="coding.cc">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="crc32c.cc">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="status.cc">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="env.cc">
+      <Filter>util</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
