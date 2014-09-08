@@ -74,26 +74,42 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="arena.h" />
     <ClInclude Include="atomic_pointer.h" />
+    <ClInclude Include="block.h" />
     <ClInclude Include="cache.h" />
     <ClInclude Include="coding.h" />
+    <ClInclude Include="comparator.h" />
     <ClInclude Include="crc32c.h" />
     <ClInclude Include="env.h" />
+    <ClInclude Include="filter_policy.h" />
     <ClInclude Include="hash.h" />
+    <ClInclude Include="histogram.h" />
+    <ClInclude Include="iterator.h" />
+    <ClInclude Include="logging.h" />
     <ClInclude Include="mutexlock.h" />
     <ClInclude Include="port.h" />
     <ClInclude Include="port_posix.h" />
     <ClInclude Include="posix_logger.h" />
+    <ClInclude Include="random.h" />
     <ClInclude Include="slice.h" />
     <ClInclude Include="status.h" />
     <ClInclude Include="thread_annatations.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="arena.cc" />
+    <ClCompile Include="block.cc" />
+    <ClCompile Include="bloom.cc" />
     <ClCompile Include="cache.cc" />
     <ClCompile Include="coding.cc" />
+    <ClCompile Include="comparator.cc" />
     <ClCompile Include="crc32c.cc" />
     <ClCompile Include="env.cc" />
+    <ClCompile Include="env_posix.cc" />
     <ClCompile Include="hash.cc" />
+    <ClCompile Include="histogram.cc" />
+    <ClCompile Include="iterator.cc" />
+    <ClCompile Include="logging.cc" />
     <ClCompile Include="port_posix.cc" />
     <ClCompile Include="status.cc" />
   </ItemGroup>

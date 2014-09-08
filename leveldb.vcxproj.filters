@@ -60,6 +60,30 @@
     <ClInclude Include="status.h">
       <Filter>util</Filter>
     </ClInclude>
+    <ClInclude Include="filter_policy.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="random.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="logging.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="arena.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="comparator.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="histogram.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="block.h">
+      <Filter>table</Filter>
+    </ClInclude>
+    <ClInclude Include="iterator.h">
+      <Filter>table</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cache.cc">
@@ -82,6 +106,30 @@
     </ClCompile>
     <ClCompile Include="env.cc">
       <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="env_posix.cc">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="bloom.cc">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="logging.cc">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="arena.cc">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="comparator.cc">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="histogram.cc">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="iterator.cc">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="block.cc">
+      <Filter>table</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
