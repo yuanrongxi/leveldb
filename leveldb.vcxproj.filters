@@ -84,6 +84,9 @@
     <ClInclude Include="iterator.h">
       <Filter>table</Filter>
     </ClInclude>
+    <ClInclude Include="format.h">
+      <Filter>table</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cache.cc">

@@ -83,6 +83,7 @@
     <ClInclude Include="crc32c.h" />
     <ClInclude Include="env.h" />
     <ClInclude Include="filter_policy.h" />
+    <ClInclude Include="format.h" />
     <ClInclude Include="hash.h" />
     <ClInclude Include="histogram.h" />
     <ClInclude Include="iterator.h" />
