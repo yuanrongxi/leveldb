@@ -9,7 +9,7 @@
 
 namespace leveldb{
 class Block;
-class RandomAccessFile; //pread-mmapģʽ
+class RandomAccessFile; //pread-mmap
 struct ReadOptions;
 
 class BlockHandle
@@ -61,6 +61,25 @@ private:
 	BlockHandle metaindex_handle_;
 	BlockHandle index_handle_;
 };
+
+static const uint64_t kTableMagicNumber = 0xdb4775248b80fb57ull;
+
+//1byte + 32bit CRC
+static const size_t kBlockTrailerSize = 5;
+
+struct BlockContents{
+	Slice	data;				//实际数据
+	bool	cachable;			//true,表示数据可以被cache
+	bool	heap_allocated;		//true,表示数据可以被delete[]进行内存释放
+};
+
+//从file中读取一个BLOCK,
+extern Status ReadBlock(RandomAccessFile* file, const ReadOptions& options, const BlockHandle& handle, BlockContents* result);
+
+inline BlockHandle::BlockHandle() : offset_(~static_cast<uint64_t>(0)), size_(~static_cast<uint64_t>(0))
+{
+}
+
 
 }
 

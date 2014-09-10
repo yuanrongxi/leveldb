@@ -87,6 +87,15 @@
     <ClInclude Include="format.h">
       <Filter>table</Filter>
     </ClInclude>
+    <ClInclude Include="options.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="iterator_wrapper.h">
+      <Filter>table</Filter>
+    </ClInclude>
+    <ClInclude Include="filter_block.h">
+      <Filter>table</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cache.cc">
@@ -132,6 +141,15 @@
       <Filter>table</Filter>
     </ClCompile>
     <ClCompile Include="block.cc">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="format.cc">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="option.cc">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="filter_block.cc">
       <Filter>table</Filter>
     </ClCompile>
   </ItemGroup>

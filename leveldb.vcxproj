@@ -82,13 +82,16 @@
     <ClInclude Include="comparator.h" />
     <ClInclude Include="crc32c.h" />
     <ClInclude Include="env.h" />
+    <ClInclude Include="filter_block.h" />
     <ClInclude Include="filter_policy.h" />
     <ClInclude Include="format.h" />
     <ClInclude Include="hash.h" />
     <ClInclude Include="histogram.h" />
     <ClInclude Include="iterator.h" />
+    <ClInclude Include="iterator_wrapper.h" />
     <ClInclude Include="logging.h" />
     <ClInclude Include="mutexlock.h" />
+    <ClInclude Include="options.h" />
     <ClInclude Include="port.h" />
     <ClInclude Include="port_posix.h" />
     <ClInclude Include="posix_logger.h" />
@@ -107,10 +110,13 @@
     <ClCompile Include="crc32c.cc" />
     <ClCompile Include="env.cc" />
     <ClCompile Include="env_posix.cc" />
+    <ClCompile Include="filter_block.cc" />
+    <ClCompile Include="format.cc" />
     <ClCompile Include="hash.cc" />
     <ClCompile Include="histogram.cc" />
     <ClCompile Include="iterator.cc" />
     <ClCompile Include="logging.cc" />
+    <ClCompile Include="option.cc" />
     <ClCompile Include="port_posix.cc" />
     <ClCompile Include="status.cc" />
   </ItemGroup>

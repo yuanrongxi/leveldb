@@ -25,7 +25,7 @@ Block::Block(const BlockContents& contents)
 		if(NumRestarts() > max_restarts_allowed)
 			size_ = 0;
 		else
-			restart_offset_ = size_ - (1 + NumRestarts()) * sizeof(uint32_t);
+			restart_offset_ = size_ - ((1 + NumRestarts()) * sizeof(uint32_t));
 	}
 }
 
@@ -35,7 +35,7 @@ Block::~Block()
 		delete[] data_;
 }
 
-static inline const char* DecodeEntry(const char* p, cosnt char* limit, 
+static const char* DecodeEntry(const char* p, cosnt char* limit, 
 	uint32_t* shared, uint32_t* non_shared, uint32_t* value_length)
 {
 	if(limit - p < 3)
@@ -53,7 +53,7 @@ static inline const char* DecodeEntry(const char* p, cosnt char* limit,
 		if ((p = GetVarint32Ptr(p, limit, non_shared)) == NULL) return NULL;
 		if ((p = GetVarint32Ptr(p, limit, value_length)) == NULL) return NULL;
 	}
-
+	//合法性判断，key + value的长度一定小于或等于entry后块的长度（limit - p）
 	if(static_cast<uint32_t>(limit - p) < (*non_shared + *value_length)){
 		return NULL;
 	}
@@ -65,16 +65,16 @@ class Block::Iter : public Iterator
 {
 
 private:
-	const Comparator* const comparator_;
-	const char* const data_;
-	uint32_t const restarts_;
-	uint32_t const num_restarts_;
+	const Comparator* const comparator_;		//key比较器
+	const char* const data_;					//block数据句柄
+	uint32_t const restarts_;					//block restart偏移量
+	uint32_t const num_restarts_;				//entries的数量
 
-	uint32_t current_;
-	uint32_t restart_index_;
-	std::string key_;
-	Slice value_;
-	Status status_;
+	uint32_t current_;							//当前指向entry的位置
+	uint32_t restart_index_;					//当前block的restart index的位置
+	std::string key_;							//当前entry的key
+	Slice value_;								//当前entry的value
+	Status status_;								//上次操作的错误码
 
 private:
 	inline int Compare(const Slice& a, const Slice& b) const 
@@ -82,9 +82,9 @@ private:
 		return comparator_->Compare(a, b);
 	}
 
-	inline uint32_t NextEntryOffset() const
+	uint32_t NextEntryOffset() const
 	{
-		return (value_.data() + value.size()) - data_;
+		return (value_.data() + value_.size()) - data_;
 	}
 
 	uint32_t GetRestartPoint(uint32_t index)
@@ -98,14 +98,14 @@ private:
 		key_.clear();
 		restart_index_ = index;
 
-		uint32_t offset = GetRestartPoint(index);
-		value_ = Slice(data_ + offset, 0);
+		uint32_t offset = GetRestartPoint(index); //计算restarts的位置
+		value_ = Slice((char*)(data_ + offset), 0);
 	}
 
 public:
 	Iter(const Comparator* comparator, const char* data, uint32_t restarts, uint32_t num_restarts)
 		: comparator_(comparator), data_(data), restarts_(restarts), num_restarts_(num_restarts),
-		  current_(restarts_), restart_index_(num_restarts_)
+		  current_(restarts), restart_index_(num_restarts_)
 	{
 		assert(num_restarts_ > 0);
 	}
@@ -168,6 +168,7 @@ public:
 				return;
 			}
 
+			//进行KEY比较
 			Slice mid_key(key_ptr, non_shared);
 			if(Compare(mid_key, target) < 0)
 				left = mid;
@@ -188,15 +189,24 @@ public:
 
 	virtual void SeekToFirst()
 	{
-		SeekToRestartPoint(0);
+		SeekToRestartPoint(0); //定位到开始
 		ParseNextKey();
 	}
 
 	virtual void SeekToLast()
 	{
-		SeekToRestartPoint(num_restarts_ - 1);
+		SeekToRestartPoint(num_restarts_ - 1); //定位到最后一个entry
 		while(ParseNextKey() && NextEntryOffset() < restarts_){
 		}
+	}
+
+	void CorruptionError()
+	{
+		current_ = restart_;
+		restart_index_ = num_restarts_;
+		status_ = Status("bad entry in block");
+		key_.clear();
+		value_.clear();
 	}
 
 	bool ParseNextKey()
