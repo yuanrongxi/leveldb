@@ -96,6 +96,12 @@
     <ClInclude Include="filter_block.h">
       <Filter>table</Filter>
     </ClInclude>
+    <ClInclude Include="block_builder.h">
+      <Filter>table</Filter>
+    </ClInclude>
+    <ClInclude Include="merger.h">
+      <Filter>table</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cache.cc">
@@ -150,6 +156,12 @@
       <Filter>util</Filter>
     </ClCompile>
     <ClCompile Include="filter_block.cc">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="block_builder.cc">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="merger.cc">
       <Filter>table</Filter>
     </ClCompile>
   </ItemGroup>

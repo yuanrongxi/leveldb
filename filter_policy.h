@@ -1,7 +1,7 @@
 #ifndef __FILTER_POLICY_H_
 #define __FILTER_POLICY_H_
 
-namesapce leveldb{
+namespace leveldb{
 class Slice;
 
 //¹ýÂËÆ÷½Ó¿Ú

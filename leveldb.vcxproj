@@ -77,6 +77,7 @@
     <ClInclude Include="arena.h" />
     <ClInclude Include="atomic_pointer.h" />
     <ClInclude Include="block.h" />
+    <ClInclude Include="block_builder.h" />
     <ClInclude Include="cache.h" />
     <ClInclude Include="coding.h" />
     <ClInclude Include="comparator.h" />
@@ -90,6 +91,7 @@
     <ClInclude Include="iterator.h" />
     <ClInclude Include="iterator_wrapper.h" />
     <ClInclude Include="logging.h" />
+    <ClInclude Include="merger.h" />
     <ClInclude Include="mutexlock.h" />
     <ClInclude Include="options.h" />
     <ClInclude Include="port.h" />
@@ -103,6 +105,7 @@
   <ItemGroup>
     <ClCompile Include="arena.cc" />
     <ClCompile Include="block.cc" />
+    <ClCompile Include="block_builder.cc" />
     <ClCompile Include="bloom.cc" />
     <ClCompile Include="cache.cc" />
     <ClCompile Include="coding.cc" />
@@ -116,6 +119,7 @@
     <ClCompile Include="histogram.cc" />
     <ClCompile Include="iterator.cc" />
     <ClCompile Include="logging.cc" />
+    <ClCompile Include="merger.cc" />
     <ClCompile Include="option.cc" />
     <ClCompile Include="port_posix.cc" />
     <ClCompile Include="status.cc" />

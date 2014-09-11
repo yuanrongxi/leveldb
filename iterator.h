@@ -6,6 +6,16 @@
 
 namespace leveldb{
 
+typedef void (*CleanupFunction)(void* arg1, void* arg2);
+struct Cleanup //一个clean function列表	
+{
+	CleanupFunction function;
+	void* arg1;
+	void* arg2;
+	Cleanup* next;
+};
+
+
 class Iterator
 {
 public:
@@ -21,19 +31,9 @@ public:
 	virtual Slice key() const = 0;
 	virtual Slice value() const = 0;
 	virtual Status status() const = 0;
-
-	typedef void (*CleanupFunction)(void* arg1, void* arg2);
 	void RegisterCleanup(CleanupFunction function, void* arg1, void* arg2);
 
 private:
-struct Cleanup //一个clean function列表	
-{
-	CleanupFunction function;
-	void* arg1;
-    void* arg2;
-    Cleanup* next;
-};
-
 	Cleanup cleanup_;
 	Iterator(const Iterator&);
 	void operator=(const Iterator&);

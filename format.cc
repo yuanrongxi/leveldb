@@ -31,8 +31,8 @@ void Footer::EncodeTo(std::string* dst) const
 #ifndef NDEBUG
 	const size_t orginal_size = dst->size();
 #endif
-	metaindex_handle_.EncodeTo(dst); //16字节
-	index_handle_.EncodeTo(dst); //16字节
+	metaindex_handle_.EncodeTo(dst); //20字节,7位存储方式（1字节表示7位)
+	index_handle_.EncodeTo(dst);	 //20字节,7位存储方式
 
 	dst->resize(2 * BlockHandle::kMaxEncodedLength);
 	//写入一个特征字
@@ -65,6 +65,7 @@ Status Footer::DecodeFrom(Slice* input)
 	}
 }
 
+//根据block handle从文件中读取一个block到内存中
 Status ReadBlock(RandomAccessFile* file, const ReadOptions& options, const BlockHandle& handle, BlockContents* result)
 {
 	result->data = Slice();
@@ -122,7 +123,7 @@ Status ReadBlock(RandomAccessFile* file, const ReadOptions& options, const Block
 				return Status::Corruption("corrupted compressed block contents");
 			}
 
-			delete buf;
+			delete []buf;
 
 			result->data = Slice(ubuf, ulength);
 			result->heap_allocated = true;

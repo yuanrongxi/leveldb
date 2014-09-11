@@ -1,17 +1,21 @@
-#include "block.h"
+#include <assert.h>
 #include <vector>
 #include <algorithm>
+
+#include "block.h"
 #include "comparator.h"
 #include "format.h"
 #include "coding.h"
 #include "logging.h"
-#include "slice.h" 
+#include "slice.h"
+#include "iterator.h"
+
 
 namespace leveldb{
 
 inline uint32_t Block::NumRestarts() const
 {
-	assert(size >= sizeof(uint32_t));
+	assert(size_ >= sizeof(uint32_t));
 	return DecodeFixed32(data_ + size_ - sizeof(uint32_t));
 }
 
@@ -61,47 +65,8 @@ static const char* DecodeEntry(const char* p, cosnt char* limit,
 	return p;
 }
 
-class Block::Iter : public Iterator
+class Iter : public Iterator
 {
-
-private:
-	const Comparator* const comparator_;		//key比较器
-	const char* const data_;					//block数据句柄
-	uint32_t const restarts_;					//block restart偏移量
-	uint32_t const num_restarts_;				//entries的数量
-
-	uint32_t current_;							//当前指向entry的位置
-	uint32_t restart_index_;					//当前block的restart index的位置
-	std::string key_;							//当前entry的key
-	Slice value_;								//当前entry的value
-	Status status_;								//上次操作的错误码
-
-private:
-	inline int Compare(const Slice& a, const Slice& b) const 
-	{
-		return comparator_->Compare(a, b);
-	}
-
-	uint32_t NextEntryOffset() const
-	{
-		return (value_.data() + value_.size()) - data_;
-	}
-
-	uint32_t GetRestartPoint(uint32_t index)
-	{
-		assert(index < num_restarts_);
-		return DecodeFixed32(data_ + restarts_ + index * sizeof(uint32_t));
-	}
-
-	void SeekToRestartPoint(uint32_t index)
-	{
-		key_.clear();
-		restart_index_ = index;
-
-		uint32_t offset = GetRestartPoint(index); //计算restarts的位置
-		value_ = Slice((char*)(data_ + offset), 0);
-	}
-
 public:
 	Iter(const Comparator* comparator, const char* data, uint32_t restarts, uint32_t num_restarts)
 		: comparator_(comparator), data_(data), restarts_(restarts), num_restarts_(num_restarts),
@@ -135,7 +100,7 @@ public:
 	{
 		assert(Valid());
 		const uint32_t original = current_;
-		while(GetRestartPoint() >= original){
+		while(GetRestartPoint(restart_index_) >= original){
 			if(restart_index_ == 0){ //回到初始位置
 				current_ = restarts_;
 				restart_index_ = num_restarts_;
@@ -202,7 +167,7 @@ public:
 
 	void CorruptionError()
 	{
-		current_ = restart_;
+		current_ = restarts_;
 		restart_index_ = num_restarts_;
 		status_ = Status("bad entry in block");
 		key_.clear();
@@ -237,6 +202,45 @@ public:
 			return true;
 		}
 	}
+
+private:
+	inline int Compare(const Slice& a, const Slice& b) const 
+	{
+		return comparator_->Compare(a, b);
+	}
+
+	uint32_t NextEntryOffset() const
+	{
+		return (value_.data() + value_.size()) - data_;
+	}
+
+	uint32_t GetRestartPoint(uint32_t index)
+	{
+		assert(index < num_restarts_);
+		return DecodeFixed32(data_ + restarts_ + index * sizeof(uint32_t));
+	}
+
+	void SeekToRestartPoint(uint32_t index)
+	{
+		key_.clear();
+		restart_index_ = index;
+
+		uint32_t offset = GetRestartPoint(index); //计算restarts的位置
+		value_ = Slice((char*)(data_ + offset), 0);
+	}
+
+private:
+	const Comparator* const comparator_;		//key比较器
+	const char* const data_;					//block数据句柄
+	uint32_t const restarts_;					//block restart偏移量
+	uint32_t const num_restarts_;				//entries的数量
+
+	uint32_t current_;							//当前指向entry的位置
+	uint32_t restart_index_;					//当前block的restart index的位置
+	std::string key_;							//当前entry的key
+	Slice value_;								//当前entry的value
+	Status status_;								//上次操作的错误码
+
 };
 
 //构建一个block::iter

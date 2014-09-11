@@ -29,8 +29,6 @@ private:
 	size_t size_;
 	uint32_t restart_offset_;
 	bool owned_;
-
-	class Iter;
 };
 
 };
