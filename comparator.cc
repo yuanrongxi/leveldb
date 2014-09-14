@@ -59,7 +59,7 @@ static const Comparator* bytewise;
 
 static void InitModule()
 {
-	 bytewise = new BytewiseComparatorImpl;
+	 bytewise = new BytewiseComparatorImpl();
 }
 
 const Comparator* BytewiseComparator()

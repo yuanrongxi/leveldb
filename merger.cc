@@ -59,18 +59,20 @@ bool MerginIterator::Valid() const
 
 void MerginIterator::SeekToFirst()
 {
-	for(int i = 0; i < n_; i++)
+	for(int i = 0; i < n_; i++) //所有的iters都回到first
 		children_[i].SeekToFirst();
 
+	//在iters中挑选最小的做为第一个
 	FindSmallest();
 	direction_ = kForward;
 }
 
 void MerginIterator::SeekToLast()
 {
-	for(int i = 0; i < n_; i ++)
+	for(int i = 0; i < n_; i ++) //所有的iters都定位到LAST
 		children_[i].SeekToLast();
 
+	//在iters中挑选最大的作为最后一个
 	FindeLargest();
 	direction_ = kReverse;
 }
@@ -193,7 +195,7 @@ Iterator* NewMergingIterator(const Comparator* comparator, Iterator** list, int 
 	else if(n == 1)
 		return list[0];
 	else
-		return new MerginIterator(comparator, list, n);
+		return new MerginIterator(comparator, list, n); //产生一个MeringIterator
 }
 
 

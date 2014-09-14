@@ -91,6 +91,9 @@
     <ClInclude Include="iterator.h" />
     <ClInclude Include="iterator_wrapper.h" />
     <ClInclude Include="logging.h" />
+    <ClInclude Include="log_format.h" />
+    <ClInclude Include="log_reader.h" />
+    <ClInclude Include="log_write.h" />
     <ClInclude Include="merger.h" />
     <ClInclude Include="mutexlock.h" />
     <ClInclude Include="options.h" />
@@ -100,7 +103,10 @@
     <ClInclude Include="random.h" />
     <ClInclude Include="slice.h" />
     <ClInclude Include="status.h" />
+    <ClInclude Include="table.h" />
+    <ClInclude Include="table_builder.h" />
     <ClInclude Include="thread_annatations.h" />
+    <ClInclude Include="two_level_iterator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arena.cc" />
@@ -119,10 +125,14 @@
     <ClCompile Include="histogram.cc" />
     <ClCompile Include="iterator.cc" />
     <ClCompile Include="logging.cc" />
+    <ClCompile Include="log_write.cc" />
     <ClCompile Include="merger.cc" />
     <ClCompile Include="option.cc" />
     <ClCompile Include="port_posix.cc" />
     <ClCompile Include="status.cc" />
+    <ClCompile Include="table.cc" />
+    <ClCompile Include="table_builder.cc" />
+    <ClCompile Include="two_level_iterator.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

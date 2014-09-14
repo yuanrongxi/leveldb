@@ -3,13 +3,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "iterator.h"
 
 namespace leveldb{
 
 class IteratorWrapper
 {
 public:
-	IteratorWrapper() : iter(NULL), valid_(false){};
+	IteratorWrapper() : iter_(NULL), valid_(false){};
 	explicit IteratorWrapper(Iterator* iter) : iter_(NULL)
 	{
 		Set(iter);
@@ -18,6 +19,11 @@ public:
 	~IteratorWrapper()
 	{
 		delete iter_;
+	}
+
+	Iterator* iter() const
+	{
+		return iter_;
 	}
 
 	void Set(Iterator* iter)
@@ -33,7 +39,7 @@ public:
 	bool Valid() const			{return valid_;};
 	Slice key() const			{assert(Valid()); return key_;};
 	Slice value() const			{assert(Valid()); return iter_->value();};
-	Status status() const		{assert(iter_); return iter->status();};
+	Status status() const		{assert(iter_); return iter_->status();};
 	void Next()
 	{
 		assert(iter_);

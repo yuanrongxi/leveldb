@@ -102,6 +102,24 @@
     <ClInclude Include="merger.h">
       <Filter>table</Filter>
     </ClInclude>
+    <ClInclude Include="two_level_iterator.h">
+      <Filter>table</Filter>
+    </ClInclude>
+    <ClInclude Include="table_builder.h">
+      <Filter>table</Filter>
+    </ClInclude>
+    <ClInclude Include="table.h">
+      <Filter>table</Filter>
+    </ClInclude>
+    <ClInclude Include="log_format.h">
+      <Filter>leveldb</Filter>
+    </ClInclude>
+    <ClInclude Include="log_write.h">
+      <Filter>table</Filter>
+    </ClInclude>
+    <ClInclude Include="log_reader.h">
+      <Filter>table</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cache.cc">
@@ -162,6 +180,18 @@
       <Filter>table</Filter>
     </ClCompile>
     <ClCompile Include="merger.cc">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="two_level_iterator.cc">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="table_builder.cc">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="table.cc">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="log_write.cc">
       <Filter>table</Filter>
     </ClCompile>
   </ItemGroup>

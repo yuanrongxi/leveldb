@@ -83,7 +83,7 @@ Status ReadBlock(RandomAccessFile* file, const ReadOptions& options, const Block
 	}
 
 	const char* data = contents.data();
-	if(options.verify_checksums){
+	if(options.verfy_checksums){
 		const uint32_t crc = crc32c::Unmask(DecodeFixed32(data + n + 1)); //获得CRC
 		const uint32_t actual = crc32c::Value(data, n + 1); //计算DATA的CRC
 		if(actual != crc){ //CRC校验
