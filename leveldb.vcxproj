@@ -82,6 +82,7 @@
     <ClInclude Include="coding.h" />
     <ClInclude Include="comparator.h" />
     <ClInclude Include="crc32c.h" />
+    <ClInclude Include="dbformat.h" />
     <ClInclude Include="env.h" />
     <ClInclude Include="filter_block.h" />
     <ClInclude Include="filter_policy.h" />
@@ -94,6 +95,7 @@
     <ClInclude Include="log_format.h" />
     <ClInclude Include="log_reader.h" />
     <ClInclude Include="log_write.h" />
+    <ClInclude Include="memtable.h" />
     <ClInclude Include="merger.h" />
     <ClInclude Include="mutexlock.h" />
     <ClInclude Include="options.h" />
@@ -101,7 +103,9 @@
     <ClInclude Include="port_posix.h" />
     <ClInclude Include="posix_logger.h" />
     <ClInclude Include="random.h" />
+    <ClInclude Include="skiplist.h" />
     <ClInclude Include="slice.h" />
+    <ClInclude Include="snapshot.h" />
     <ClInclude Include="status.h" />
     <ClInclude Include="table.h" />
     <ClInclude Include="table_builder.h" />
@@ -117,6 +121,7 @@
     <ClCompile Include="coding.cc" />
     <ClCompile Include="comparator.cc" />
     <ClCompile Include="crc32c.cc" />
+    <ClCompile Include="dbformat.cc" />
     <ClCompile Include="env.cc" />
     <ClCompile Include="env_posix.cc" />
     <ClCompile Include="filter_block.cc" />
@@ -125,6 +130,7 @@
     <ClCompile Include="histogram.cc" />
     <ClCompile Include="iterator.cc" />
     <ClCompile Include="logging.cc" />
+    <ClCompile Include="log_reader.cc" />
     <ClCompile Include="log_write.cc" />
     <ClCompile Include="merger.cc" />
     <ClCompile Include="option.cc" />

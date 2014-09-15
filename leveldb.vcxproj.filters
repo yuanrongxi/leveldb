@@ -115,10 +115,22 @@
       <Filter>leveldb</Filter>
     </ClInclude>
     <ClInclude Include="log_write.h">
-      <Filter>table</Filter>
+      <Filter>leveldb</Filter>
     </ClInclude>
     <ClInclude Include="log_reader.h">
-      <Filter>table</Filter>
+      <Filter>leveldb</Filter>
+    </ClInclude>
+    <ClInclude Include="skiplist.h">
+      <Filter>leveldb</Filter>
+    </ClInclude>
+    <ClInclude Include="snapshot.h">
+      <Filter>leveldb</Filter>
+    </ClInclude>
+    <ClInclude Include="memtable.h">
+      <Filter>leveldb</Filter>
+    </ClInclude>
+    <ClInclude Include="dbformat.h">
+      <Filter>leveldb</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -192,7 +204,13 @@
       <Filter>table</Filter>
     </ClCompile>
     <ClCompile Include="log_write.cc">
-      <Filter>table</Filter>
+      <Filter>leveldb</Filter>
+    </ClCompile>
+    <ClCompile Include="log_reader.cc">
+      <Filter>leveldb</Filter>
+    </ClCompile>
+    <ClCompile Include="dbformat.cc">
+      <Filter>leveldb</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
