@@ -23,6 +23,8 @@ extern bool GetLengthPrefixedSlice(Slice* input, Slice* result);
 extern const char* GetVarint32Ptr(const char* p,const char* limit, uint32_t* v);
 extern const char* GetVarint64Ptr(const char* p,const char* limit, uint64_t* v);
 
+extern int VarintLength(uint64_t v);
+
 extern void EncodeFixed32(char* dst, uint32_t value);
 extern void EncodeFixed64(char* dst, uint64_t value);
 

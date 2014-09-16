@@ -84,6 +84,7 @@
     <ClInclude Include="crc32c.h" />
     <ClInclude Include="dbformat.h" />
     <ClInclude Include="env.h" />
+    <ClInclude Include="filename.h" />
     <ClInclude Include="filter_block.h" />
     <ClInclude Include="filter_policy.h" />
     <ClInclude Include="format.h" />
@@ -109,8 +110,10 @@
     <ClInclude Include="status.h" />
     <ClInclude Include="table.h" />
     <ClInclude Include="table_builder.h" />
+    <ClInclude Include="table_cache.h" />
     <ClInclude Include="thread_annatations.h" />
     <ClInclude Include="two_level_iterator.h" />
+    <ClInclude Include="version_edit.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arena.cc" />
@@ -124,6 +127,7 @@
     <ClCompile Include="dbformat.cc" />
     <ClCompile Include="env.cc" />
     <ClCompile Include="env_posix.cc" />
+    <ClCompile Include="filename.cc" />
     <ClCompile Include="filter_block.cc" />
     <ClCompile Include="format.cc" />
     <ClCompile Include="hash.cc" />
@@ -132,13 +136,16 @@
     <ClCompile Include="logging.cc" />
     <ClCompile Include="log_reader.cc" />
     <ClCompile Include="log_write.cc" />
+    <ClCompile Include="memtable.cc" />
     <ClCompile Include="merger.cc" />
     <ClCompile Include="option.cc" />
     <ClCompile Include="port_posix.cc" />
     <ClCompile Include="status.cc" />
     <ClCompile Include="table.cc" />
     <ClCompile Include="table_builder.cc" />
+    <ClCompile Include="table_cache.cc" />
     <ClCompile Include="two_level_iterator.cc" />
+    <ClCompile Include="version_edit.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

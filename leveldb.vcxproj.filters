@@ -132,6 +132,15 @@
     <ClInclude Include="dbformat.h">
       <Filter>leveldb</Filter>
     </ClInclude>
+    <ClInclude Include="table_cache.h">
+      <Filter>leveldb</Filter>
+    </ClInclude>
+    <ClInclude Include="filename.h">
+      <Filter>leveldb</Filter>
+    </ClInclude>
+    <ClInclude Include="version_edit.h">
+      <Filter>leveldb</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cache.cc">
@@ -210,6 +219,18 @@
       <Filter>leveldb</Filter>
     </ClCompile>
     <ClCompile Include="dbformat.cc">
+      <Filter>leveldb</Filter>
+    </ClCompile>
+    <ClCompile Include="table_cache.cc">
+      <Filter>leveldb</Filter>
+    </ClCompile>
+    <ClCompile Include="filename.cc">
+      <Filter>leveldb</Filter>
+    </ClCompile>
+    <ClCompile Include="memtable.cc">
+      <Filter>leveldb</Filter>
+    </ClCompile>
+    <ClCompile Include="version_edit.cc">
       <Filter>leveldb</Filter>
     </ClCompile>
   </ItemGroup>

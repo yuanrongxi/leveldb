@@ -299,7 +299,7 @@ public:
 	virtual Handle* Lookup(const Slice& key)
 	{
 		const uint32_t hash = HashSlice(key);
-		return shard_[Shard(hash)].Lookup(key);
+		return shard_[Shard(hash)].Lookup(key, hash);
 	}
 
 	virtual void Release(Handle* handle)

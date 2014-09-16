@@ -81,9 +81,11 @@ private:
 public:
 	explicit InternalKeyComparator(const Comparator* c) : user_comparator_(c){};
 	virtual const char* Name() const;
-	virtual int Comparator(const Slice& a, const Slice& b) const;
+	virtual int Compare(const Slice& a, const Slice& b) const;
 
 	virtual void FindShortestSeparator(std::string* start, const Slice& limit) const;
+	virtual void FindShortSuccessor(std::string* key) const;
+
 	const Comparator* user_comparator() const {return user_comparator_;};
 
 	int Compare(const InternalKey& a, const InternalKey& b) const;
@@ -167,17 +169,18 @@ class LookupKey
 public:
 	LookupKey(const Slice& user_key, SequenceNumber sequence);
 	~LookupKey();
-
+	
+	//memtable key = length + user_key + seq
 	Slice memtable_key() const
 	{
 		return Slice(start_, end_ - start_);
 	}
-
+	//internal key = user_key + seq
 	Slice internal_key() const
 	{
 		return Slice(kstart_, end_ - kstart_);
 	}
-
+	//key = user_key
 	Slice user_key() const
 	{
 		return Slice(kstart_, end_ - kstart_ - 8);

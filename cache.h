@@ -6,6 +6,8 @@
 
 namespace leveldb{
 
+extern Cache* NewLRUCache(size_t capacity);
+
 class Cache
 {
 public:
