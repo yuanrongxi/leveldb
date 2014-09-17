@@ -114,6 +114,7 @@
     <ClInclude Include="thread_annatations.h" />
     <ClInclude Include="two_level_iterator.h" />
     <ClInclude Include="version_edit.h" />
+    <ClInclude Include="version_set.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arena.cc" />
@@ -146,6 +147,7 @@
     <ClCompile Include="table_cache.cc" />
     <ClCompile Include="two_level_iterator.cc" />
     <ClCompile Include="version_edit.cc" />
+    <ClCompile Include="version_set.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

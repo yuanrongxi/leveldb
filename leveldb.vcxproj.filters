@@ -141,6 +141,9 @@
     <ClInclude Include="version_edit.h">
       <Filter>leveldb</Filter>
     </ClInclude>
+    <ClInclude Include="version_set.h">
+      <Filter>leveldb</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cache.cc">
@@ -231,6 +234,9 @@
       <Filter>leveldb</Filter>
     </ClCompile>
     <ClCompile Include="version_edit.cc">
+      <Filter>leveldb</Filter>
+    </ClCompile>
+    <ClCompile Include="version_set.cc">
       <Filter>leveldb</Filter>
     </ClCompile>
   </ItemGroup>

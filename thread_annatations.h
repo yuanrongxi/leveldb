@@ -1,5 +1,5 @@
 #ifndef STORAGE_LEVELDB_PORT_THREAD_ANNOTATIONS_H
-
+#define STORAGE_LEVELDB_PORT_THREAD_ANNOTATIONS_H
 // Some environments provide custom macros to aid in static thread-safety
 // analysis.  Provide empty definitions of such macros unless they are already
 // defined.
