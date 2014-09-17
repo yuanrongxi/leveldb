@@ -12,6 +12,7 @@
 #include "two_level_iterator.h"
 #include "coding.h"
 #include "logging.h"
+#include "env.h"
 
 namespace leveldb{
 
@@ -770,7 +771,277 @@ void VersionSet::AppendVersion(Version* v)
 
 Status VersionSet::LogAndApply(VersionEdit* edit, port::Mutex* mu)
 {
+	//设置edit的一些参数
+	if(edit->has_log_number_){
+		assert(edit->log_number_ >= log_number_);
+		assert(edit->log_number_ < next_file_number_);
+	}
+	else{
+		edit->SetLogNumber(log_number_);
+	}
 
+	if(!edit->has_prev_log_number_)
+		edit->SetPrevLogNumber(prev_log_number_);
+
+	edit->SetNextFile(next_file_number_);
+	edit->SetLastSequence(last_sequence_);
+
+	//将current_ 和 edit合并到v当中
+	Version* v = new Version(this);
+	{
+		Builder builder(this, current_);
+		builder.Apply(edit);
+		builder.SaveTo(v);
+	}
+	Finalize(v);
+
+	std::string new_manifest_file;
+	Status s;
+	if(descriptor_log_ == NULL){ //如果日志文件还没有创建
+		assert(descriptor_file_ == NULL);
+		//获得一个//dbname/MANIFEST-number的文件名
+		new_manifest_file = DescriptorFileName(dbname_, manifest_file_number_);
+		edit->SetNextFile(next_file_number_);
+		//打开new_manifest_file文件
+		s = env_->NewWritableFile(new_manifest_file, &descriptor_file_);
+		if(s.ok()) //创建一个log writer对象
+			descriptor_log_ = new log::Writer(descriptor_file_);
+	}
+
+	{
+		mu->Unlock();
+		
+		if(s.ok()){
+			//打包edit并写入log writer当中
+			std::string record;
+			edit->EncodeTo(&record); 
+			s = descriptor_log_->AddRecord(record);
+			if(s.ok())
+				s = descriptor_file_->Sync();
+
+			if(!s.ok())
+				Log(options_->info_log, "MANIFEST write: %s\n", s.ToString().c_str());
+		}
+
+		//创建一个//dbname/CURRENT文件，并将MANIFEST的文件名写入到第一行
+		if(s.ok() && !new_manifest_file.empty())
+			s = SetCurrentFile(env_, dbname_, manifest_file_number_);
+
+		mu->Lock();
+	}
+
+	//将v添加到链表当中
+	if(s.ok()){
+		AppendVersion(v);
+		log_number_ = edit->log_number_;
+		prev_log_number_ = edit->prev_log_number_;
+	}
+	else{ //文件操作失败,释放掉创建的文件和句柄
+		delete v;
+		if(!new_manifest_file.empty()){
+			delete descriptor_log_;
+			delete descriptor_file_;
+			descriptor_log_ = NULL;
+			descriptor_file_ = NULL;
+			env_->DeleteFile(new_manifest_file);
+		}
+	}
+
+	return s;
+}
+
+//通过日志恢复数据
+Status VersionSet::Recover()
+{
+	struct LogReporter : public log::Reader::Reporter
+	{
+		Status* status;
+		virtual void Corruption(size_t bytes, const Status& s)
+		{
+			if (this->status->ok()) *this->status = s;
+		}
+	};
+
+	//读取/dbname/CURRENT的内容
+	std::string current;
+	Status s = ReadFileToString(env_, CurrentFileName(dbname_), &current);
+	if(s.ok())
+		return s;
+
+	//CURRENT的内容错误或者被改动了
+	if(current.empty() || current[current.size() - 1] !='\n')
+		return Status:::Corruption("CURRENT file does not end with newline");
+
+	current.resize(current.size() - 1);//去掉最后\n
+	//获得DescriptorFileName,并将其打开
+	std::string dscname = dbname_ + "/" + current;
+	SequentialFile* file;
+	s = env_->NewSequentialFile(dscname, &file);
+	if(!s.ok())
+		return s;
+
+	bool have_log_number = false;
+	bool have_prev_log_number = false;
+	bool have_next_file = false;
+	bool have_last_sequence = false;
+
+	uint64_t next_file = 0;
+	uint64_t last_sequence = 0;
+	uint64_t log_number = 0;
+	uint64_t prev_log_number = 0;
+
+	Builder builder(this, current_);
+	{
+		LogReporter reporter;
+		reporter.status = &s;
+		//创建一个log reader对象
+		log::Reader reader(file, &reporter, true, 0);
+
+		Slice record;
+		std::string scratch;
+		while(reader.ReadRecord(&record, &scratch) && s.ok()){
+			//尝试对versionedit的读取
+			VersionEdit edit;
+			s = edit.DecodeFrom(record);
+			if(s.ok()){
+				if (edit.has_comparator_ && edit.comparator_ != icmp_.user_comparator()->Name()) {
+					s = Status::InvalidArgument(edit.comparator_ + " does not match existing comparator ", icmp_.user_comparator()->Name());
+				}
+			}
+
+			//如果是version edit,将其加入到builder当中
+			if(s.ok())
+				builder.Apply(&edit);
+
+			if (edit.has_log_number_) {
+				log_number = edit.log_number_;
+				have_log_number = true;
+			}
+
+			if (edit.has_prev_log_number_) {
+				prev_log_number = edit.prev_log_number_;
+				have_prev_log_number = true;
+			}
+
+			if (edit.has_next_file_number_) {
+				next_file = edit.next_file_number_;
+				have_next_file = true;
+			}
+
+			if (edit.has_last_sequence_) {
+				last_sequence = edit.last_sequence_;
+				have_last_sequence = true;
+			}
+		}
+	}
+
+	delete file;
+	file = NULL;
+
+	if(s.ok()){
+		if(!have_next_file){
+			 s = Status::Corruption("no meta-nextfile entry in descriptor");
+		}
+		else if(!have_log_number){
+			 s = Status::Corruption("no meta-lognumber entry in descriptor");
+		}
+		else if(!have_last_sequence){
+			 s = Status::Corruption("no last-sequence-number entry in descriptor");
+		}
+
+		if(!have_prev_log_number)
+			prev_log_number = 0;
+
+		//保证写一个file number一定比任何日志中的都大
+		MarkFileNumberUsed(prev_log_number);
+		MarkFileNumberUsed(log_number);
+	}
+
+	if(s.ok()){ //创建一个Version 并加入到VersionSet当中
+		Version* v = new Version(this);
+		builder.SaveTo(v);
+		Finalize(v);
+
+		AppendVersion(v);
+		//更改version参数
+		manifest_file_number_ = next_file;
+		next_file_number_ = next_file + 1;
+		last_sequence_ = last_sequence;
+		log_number_ = log_number;
+		prev_log_number_ = prev_log_number;
+	}
+
+	return s;
+}
+
+void VersionSet::MarkFileNumberUsed(uint64_t number)
+{
+	if(next_file_number_ <= number)
+		next_file_number_ = number + 1;
+}
+
+//判断level是否需要compaction
+void VersionSet::Finalize(Version* v)
+{
+	int best_level = -1;
+	double best_score = -1;
+	
+	for(int level = 0; level < config::kNumLevels - 1; level++){
+		double score;
+		if(level == 0){
+			//在level 0的处理中，我们用BUFFER中的文件个数代替字节的原因有2个，
+			//(1) 如果write buffer太大，做太多的compactions动作并不好
+			//(2)level 0在每次读的时候会合并数据，这样做是了防止太多了小文件？？
+			score =v->files_[level].size() / static_cast<double>(config::kL0_CompactionTrigger);
+		}
+		else{
+			const uint64_t level_bytes = TotalFileSize(v->files_[level]);
+			score = static_cast<double>(level_bytes) / MaxBytesForLevel(level);
+		}
+
+		if(score > best_score){
+			best_level = level;
+			best_score = score;
+		}
+	}
+
+	v->compaction_level_ = best_level;
+	v->compaction_score_ = best_score;
+}
+
+Status VersionSet::WriteSnapshot(log::Writer* log)
+{
+	VersionEdit edit;
+	edit.SetComparatorName(icmp_.user_comparator()->Name());
+
+	//保存合并点
+	for(int level = 0; level = config::kNumLevels; level++){
+		if(!compact_pointer_[level].empty()){
+			InternalKey key;
+			//保存compaction pointers
+			key.DecodeFrom(compact_pointer_[level]);
+			edit.SetCompactPointer(level, key);
+		}
+	}
+
+	for(int level = 0; level < config::kNumLevels; level ++){
+		const std::vector<FileMetaData*>& files = current_->files_[level];
+		for(size_t i = 0; i < files.size(); i ++){
+			const FileMetaData* f = files[i];
+			edit.AddFile(level, f->number, f->file_size, f->smallest, f->largest);
+		}
+	}
+
+	std::string record;
+	edit.EncodeTo(&record);
+	return log->AddRecord(record);
+}
+
+int VersionSet::NumLevelFiles(int level) const
+{
+	assert(level >= 0);
+	assert(level < config::kNumLevels);
+	return current_->files_[level].size();
 }
 
 };//leveldb

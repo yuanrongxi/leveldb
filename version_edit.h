@@ -73,7 +73,7 @@ public:
 		compact_pointers_.push_back(std::make_pair(level, key));
 	}
 
-	void AddFile(int level, uint64_t file, uint64_t file_size, InternalKey& smallest, const InternalKey& largest)
+	void AddFile(int level, uint64_t file, uint64_t file_size, const InternalKey& smallest, const InternalKey& largest)
 	{
 		FileMetaData f;
 		f.number = file;
