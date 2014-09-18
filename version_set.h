@@ -138,6 +138,8 @@ public:
 
 	int64_t MaxNextLevelOverlappingBytes();
 
+	Iterator* MakeInputIterator(Compaction* c);
+
 	bool NeedsCompaction() const 
 	{
 		Version* v = current_;
@@ -235,7 +237,7 @@ private:
 	std::vector<FileMetaData*> grandparents_;
 
 	size_t grandparent_index_;
-	bool seen_key;
+	bool seen_key_;
 	int64_t overlapped_bytes_;
 
 	size_t level_ptrs_[config::kNumLevels];

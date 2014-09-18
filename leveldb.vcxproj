@@ -83,6 +83,7 @@
     <ClInclude Include="comparator.h" />
     <ClInclude Include="crc32c.h" />
     <ClInclude Include="dbformat.h" />
+    <ClInclude Include="db_iter.h" />
     <ClInclude Include="env.h" />
     <ClInclude Include="filename.h" />
     <ClInclude Include="filter_block.h" />
@@ -126,6 +127,7 @@
     <ClCompile Include="comparator.cc" />
     <ClCompile Include="crc32c.cc" />
     <ClCompile Include="dbformat.cc" />
+    <ClCompile Include="db_iter.cc" />
     <ClCompile Include="env.cc" />
     <ClCompile Include="env_posix.cc" />
     <ClCompile Include="filename.cc" />
