@@ -3,6 +3,7 @@
 
 #include <string>
 
+namespace leveldb{
 class Slice;
 
 class Comparator
@@ -17,5 +18,6 @@ public:
 };
 
 extern const Comparator* ByteWiseComparator();
+};//leveldb
 
 #endif

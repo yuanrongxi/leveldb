@@ -48,6 +48,7 @@ public:
 	}
 
 	virtual bool Valid() const {return valid_;};
+
 	virtual Slice key() const
 	{
 		assert(valid_);
@@ -128,7 +129,7 @@ inline bool DBIter::ParseKey(ParsedInternalKey* ikey)
 	//因为每次从磁盘中读取1M的数据相当一次io seek,所以没读取1M的数据中，产生一次对version的seek次数的判断，根据当前的key来判断
 	while(bytes_counter_ < 0){
 		bytes_counter_ += RandomPeriod(); //随机产生一个1 ~ 2M的数，平均是1M
-		db_->RecordReadSample(k);
+		db_->RecordReadSample(k); //检查是否需要SEEK
 	}
 
 	//将key解析到ikey当中
@@ -158,7 +159,7 @@ void DBIter::Next()
 	else
 		SaveKey(ExtractUserKey(iter_->key()), &saved_key_);
 
-	FindNextUserEntry(true, & saved_key_);
+	FindNextUserEntry(true, &saved_key_);
 }
 
 void DBIter::FindNextUserEntry(bool skipping, std::string* skip)
@@ -241,7 +242,7 @@ void DBIter::FindPrevUserEntry()
 					Slice raw_value = iter_->value();
 					if(saved_value_.capacity() > raw_value.size() + 1048576){ //saved_value开辟的空间很大
 						std::string empty;
-						swap(empty, saved_value_);
+						swap(empty, saved_value_); //只做内存清空，不做内存调整
 					}
 
 					SaveKey(ExtractUserKey(iter_->key()), &saved_key_);

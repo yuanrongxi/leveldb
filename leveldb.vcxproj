@@ -78,10 +78,12 @@
     <ClInclude Include="atomic_pointer.h" />
     <ClInclude Include="block.h" />
     <ClInclude Include="block_builder.h" />
+    <ClInclude Include="builder.h" />
     <ClInclude Include="cache.h" />
     <ClInclude Include="coding.h" />
     <ClInclude Include="comparator.h" />
     <ClInclude Include="crc32c.h" />
+    <ClInclude Include="db.h" />
     <ClInclude Include="dbformat.h" />
     <ClInclude Include="db_iter.h" />
     <ClInclude Include="env.h" />
@@ -122,6 +124,7 @@
     <ClCompile Include="block.cc" />
     <ClCompile Include="block_builder.cc" />
     <ClCompile Include="bloom.cc" />
+    <ClCompile Include="builder.cc" />
     <ClCompile Include="cache.cc" />
     <ClCompile Include="coding.cc" />
     <ClCompile Include="comparator.cc" />
