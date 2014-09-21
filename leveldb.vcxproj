@@ -49,7 +49,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;LEVELDB_PLATFORM_POSIX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -85,6 +85,7 @@
     <ClInclude Include="crc32c.h" />
     <ClInclude Include="db.h" />
     <ClInclude Include="dbformat.h" />
+    <ClInclude Include="db_impl.h" />
     <ClInclude Include="db_iter.h" />
     <ClInclude Include="env.h" />
     <ClInclude Include="filename.h" />
@@ -118,6 +119,8 @@
     <ClInclude Include="two_level_iterator.h" />
     <ClInclude Include="version_edit.h" />
     <ClInclude Include="version_set.h" />
+    <ClInclude Include="write_batch.h" />
+    <ClInclude Include="Write_batch_internal.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arena.cc" />
@@ -130,6 +133,7 @@
     <ClCompile Include="comparator.cc" />
     <ClCompile Include="crc32c.cc" />
     <ClCompile Include="dbformat.cc" />
+    <ClCompile Include="db_impl.cc" />
     <ClCompile Include="db_iter.cc" />
     <ClCompile Include="env.cc" />
     <ClCompile Include="env_posix.cc" />
@@ -153,6 +157,7 @@
     <ClCompile Include="two_level_iterator.cc" />
     <ClCompile Include="version_edit.cc" />
     <ClCompile Include="version_set.cc" />
+    <ClCompile Include="write_batch.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

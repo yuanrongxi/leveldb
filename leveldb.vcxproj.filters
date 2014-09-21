@@ -153,6 +153,15 @@
     <ClInclude Include="db.h">
       <Filter>leveldb</Filter>
     </ClInclude>
+    <ClInclude Include="write_batch.h">
+      <Filter>leveldb</Filter>
+    </ClInclude>
+    <ClInclude Include="Write_batch_internal.h">
+      <Filter>leveldb</Filter>
+    </ClInclude>
+    <ClInclude Include="db_impl.h">
+      <Filter>leveldb</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cache.cc">
@@ -252,6 +261,12 @@
       <Filter>leveldb</Filter>
     </ClCompile>
     <ClCompile Include="builder.cc">
+      <Filter>leveldb</Filter>
+    </ClCompile>
+    <ClCompile Include="write_batch.cc">
+      <Filter>leveldb</Filter>
+    </ClCompile>
+    <ClCompile Include="db_impl.cc">
       <Filter>leveldb</Filter>
     </ClCompile>
   </ItemGroup>
