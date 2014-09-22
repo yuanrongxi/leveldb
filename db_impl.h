@@ -74,9 +74,9 @@ private:
 
 	Status WriteLevel0Table(MemTable* mem, VersionEdit* edit, Version* base)  EXCLUSIVE_LOCKS_REQUIRED(mutex_);
 
-	Status MakeRoomForWrite() EXCLUSIVE_LOCKS_REQUIRED(mutex_);
+	Status MakeRoomForWrite(bool force) EXCLUSIVE_LOCKS_REQUIRED(mutex_);
 
-	WriteBatch* BuildBatchGroup(WriteBatch);
+	WriteBatch* BuildBatchGroup(Writer** last_writer);
 
 	void RecordBackgroundError(const Status& s);
 
