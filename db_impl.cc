@@ -266,7 +266,7 @@ void DBImpl::DeleteObsoleteFiles()
 Status DBImpl::Recover(VersionEdit* edit)
 {
 	mutex_.AssertHeld();
-
+	//建立一个dbname的目录
 	env_->CreateDir(dbname_);
 	assert(db_lock_ == NULL);
 
@@ -275,8 +275,9 @@ Status DBImpl::Recover(VersionEdit* edit)
 	if(!s.ok())
 		return s;
 
+	//判断dbname/CURRENT文件是否存在
 	if(!env_->FileExists(CurrentFileName(dbname_))){
-		if(options_.create_if_missing){
+		if(options_.create_if_missing){ //不存在，但是options配置了需要创建，就创建一个新的DB
 			s = NewDB();
 			if(s.ok())
 				return s;
@@ -293,7 +294,7 @@ Status DBImpl::Recover(VersionEdit* edit)
 	s = versions_->Recover();
 	if(s.ok()){
 		SequenceNumber max_sequence(0);
-		const uint64_t min_log = versions_->LogNumber();
+		const uint64_t min_log = versions_->LogNumber();     
 		const uint64_t prev_log = versions_->PrevLogNumber();
 
 		std::vector<std::string> filenames;
@@ -311,7 +312,7 @@ Status DBImpl::Recover(VersionEdit* edit)
 		for (size_t i = 0; i < filenames.size(); i++) {
 			if (ParseFileName(filenames[i], &number, &type)) {
 				expected.erase(number);
-				if (type == kLogFile && ((number >= min_log) || (number == prev_log)))
+				if (type == kLogFile && ((number >= min_log) || (number == prev_log))) //获得log 文件名的序列
 					logs.push_back(number);
 			}
 		}
@@ -323,7 +324,7 @@ Status DBImpl::Recover(VersionEdit* edit)
 			return Status::Corruption(buf, TableFileName(dbname_, *(expected.begin())));
 		}
 
-		//进行数据库日志文件的读取，并回复
+		//进行数据库日志文件的读取，并进行记录恢复
 		std::sort(logs.begin(), logs.end());
 		for(size_t i = 0; i < logs.size(); i++){
 			s = RecoverLogFile(logs[i], edit, &max_sequence);
@@ -486,7 +487,7 @@ void DBImpl::CompactMemTable()
 	VersionEdit edit;
 	Version* base = versions_->current();
 	base->Ref();
-
+	//将imm_写入到block table当中
 	Status s = WriteLevel0Table(imm_, &edit, base);
 	base->Unref();
 
@@ -499,6 +500,7 @@ void DBImpl::CompactMemTable()
 		s = versions_->LogAndApply(&edit, &mutex_);
 	}
 
+	//进行垃圾文件回收
 	if(s.ok()){
 		imm_->Unref();
 		imm_ = NULL;
@@ -508,7 +510,7 @@ void DBImpl::CompactMemTable()
 	else
 		RecordBackgroundError(s);
 }
-
+//测试Compact 所用
 void DBImpl::CompactRange(const Slice* begin, const Slice* end)
 {
 	int max_level_with_files = 1;
@@ -837,7 +839,7 @@ Status DBImpl::InstallCompactionResults(CompactionState* compact)
 		const CompactionState::Output& out = compact->outputs[i];
 		compact->compaction->edit()->AddFile(level + 1, out.number, out.file_size, out.smallest, out.largest);
 	}
-
+	//对session set的更新
 	return versions_->LogAndApply(compact->compaction->edit(), &mutex_);
 }
 
@@ -1061,6 +1063,7 @@ Status DBImpl::Get(const ReadOptions& options, const Slice& key, std::string* va
 	MutexLock l(&mutex_);
 	SequenceNumber snapshot;
 
+	//获得最后snapshot最后写到到文件的Sequence number
 	if (options.snapshot != NULL)
 		snapshot = reinterpret_cast<const SnapshotImpl*>(options.snapshot)->number_;
 	else

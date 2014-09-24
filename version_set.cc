@@ -852,7 +852,7 @@ Status VersionSet::LogAndApply(VersionEdit* edit, port::Mutex* mu)
 	return s;
 }
 
-//通过日志恢复数据
+//通过日志恢复version set
 Status VersionSet::Recover()
 {
 	struct LogReporter : public log::Reader::Reporter
@@ -871,7 +871,7 @@ Status VersionSet::Recover()
 		return s;
 
 	//CURRENT的内容错误或者被改动了
-	if(current.empty() || current[current.size() - 1] !='\n')
+	if(current.empty() || current[current.size() - 1] != '\n')
 		return Status:::Corruption("CURRENT file does not end with newline");
 
 	current.resize(current.size() - 1);//去掉最后\n
@@ -962,6 +962,7 @@ Status VersionSet::Recover()
 	if(s.ok()){ //创建一个Version 并加入到VersionSet当中
 		Version* v = new Version(this);
 		builder.SaveTo(v);
+		//对version的score评估
 		Finalize(v);
 
 		AppendVersion(v);
@@ -1026,7 +1027,7 @@ Status VersionSet::WriteSnapshot(log::Writer* log)
 		}
 	}
 
-	//写入version各个层的文件信息
+	//写入version各个层的文件信息到version edit当中
 	for(int level = 0; level < config::kNumLevels; level ++){
 		const std::vector<FileMetaData*>& files = current_->files_[level];
 		for(size_t i = 0; i < files.size(); i ++){
@@ -1035,8 +1036,10 @@ Status VersionSet::WriteSnapshot(log::Writer* log)
 		}
 	}
 
+	//对version edit编码
 	std::string record;
 	edit.EncodeTo(&record);
+	//写入日志文件
 	return log->AddRecord(record);
 }
 
